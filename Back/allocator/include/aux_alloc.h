@@ -8,11 +8,18 @@ enum alloc_mode{
     NEXT
 };
 
+enum defrag_mode{
+    INIT,
+    END,
+    OPT
+};
+
 struct bloco{
     int id;
     int ini;
     int sz;
     bloco(int nid, int nini, int nsz) : id(nid), ini(nini), sz(nsz){}
+    bloco(){}
 
     bool operator <(bloco& o){
         if(ini != o.ini) return ini < o.ini;

@@ -3,21 +3,25 @@
 
 #include "aux_alloc.h"
 #include <set>
+#include <vector>
 
 class memory{
     public:
     memory(int sz);
-    bool alloc(int n, alloc_mode am);
-    bool freeid();
-    bool freeaddr();
+    std::pair <int, int> alloc(int n, alloc_mode am);
+    bool freeid(int id);
+    bool freeaddr(int addr);
     void show(); // definir saida
     void stats(); // definir saida
     void defrag();
     
     private:
-        int memory_sz;
-        int cnt_id;
-        std::set <bloco> blocos;
+    int memory_sz;
+    int cnt_id;
+    int next_fit;
+    std::set <bloco> blocos;
+    int ocuppation;
+    int l_hole();
 };
 
 #endif
