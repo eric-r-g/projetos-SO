@@ -1,7 +1,7 @@
 #ifndef ESC_ABSTRACT_H
 #define ESC_ABSTRACT_H
 
-#include "aux.h"
+#include "aux_esc.h"
 #include <map>
 #include <string>
 

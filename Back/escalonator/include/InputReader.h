@@ -6,7 +6,7 @@
 #include <filesystem>
 #include <fstream>
 #include <vector>
-#include "aux.h"
+#include "aux_esc.h"
 
 class InputReader {
     public:

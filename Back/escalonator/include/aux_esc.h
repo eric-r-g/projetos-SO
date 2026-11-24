@@ -1,5 +1,5 @@
-#ifndef AUX_H
-#define AUX_H
+#ifndef AUX_ESC_H
+#define AUX_ESC_H
 
 #include <map>
 #include <vector>
