@@ -3,7 +3,6 @@ CPPFLAGS := -Iinclude                 # Flags de pré-processamento
 CXXFLAGS := -MMD -MP                  # Flags de compilação
 LDFLAGS  :=                           # Flags de linkagem
 
-# necessario atualizar, não está funcionando
 SRC      := $(wildcard src/*.cpp)
 OBJ      := $(patsubst src/%.cpp,build/%.o,$(SRC))
 DEP      := $(OBJ:.o=.d)

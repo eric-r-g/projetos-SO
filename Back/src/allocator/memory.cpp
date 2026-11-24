@@ -1,4 +1,4 @@
-#include "../include/memory.h"
+#include "../../include/allocator/memory.h"
 
 memory::memory(int sz){
     memory_sz = sz;
@@ -163,4 +163,9 @@ int memory::l_hole(){
         fim = b.ini + b.sz;
     }
     return hole;
+}
+
+void memory::defrag(){
+    std::vector <bloco> esquerda, direita;
+    
 }
