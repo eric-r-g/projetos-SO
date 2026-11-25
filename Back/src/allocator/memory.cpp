@@ -1,4 +1,5 @@
 #include "../../include/allocator/memory.h"
+#include <bits/stdc++.h>
 
 memory::memory(int sz){
     memory_sz = sz;
@@ -165,7 +166,57 @@ int memory::l_hole(){
     return hole;
 }
 
-void memory::defrag(){
-    std::vector <bloco> esquerda, direita;
+void memory::defrag(defrag_mode dm){
+    std::vector <bloco> temp;
     
+    int ini = 0, end = memory_sz;
+    switch (dm)
+    {
+    case INIT:
+        for (auto it = blocos.rbegin(); it != blocos.rend(); ++it) {
+            bloco b = *it;
+            b.ini = end - b.sz;
+            end = b.ini;
+            temp.push_back(b);
+        }
+        break;
+
+    case END:
+        for (auto it = blocos.begin(); it != blocos.end(); ++it) {
+            bloco b = *it;
+            b.ini = ini;
+            ini = b.ini + b.sz;
+            temp.push_back(b);
+        }
+    case OPT: {
+        auto l = blocos.begin();
+        auto r = blocos.end();
+        
+        while(l != r){
+            bloco bl = *l;
+            bloco br = *prev(r);
+            
+            int ldif = bl.ini - ini;
+            int rdif = end - (br.ini + br.sz);
+            if(ldif < rdif){
+                bl.ini = ini;
+                ini = bl.ini + bl.sz;
+                temp.push_back(bl);
+                l++;
+            } else {
+                br.ini = end - br.sz;
+                end = br.ini;
+                temp.push_back(br);
+                r--;
+            }
+        }
+        break;
+        }
+    default:
+        break;
+    }
+
+    blocos.clear();
+    for(bloco b : temp)
+        blocos.insert(b);
 }

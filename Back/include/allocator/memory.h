@@ -13,7 +13,7 @@ class memory{
     bool freeaddr(int addr);
     void show(); // definir saida
     void stats(); // definir saida
-    void defrag();
+    void defrag(defrag_mode dm);
     
     private:
     int memory_sz;

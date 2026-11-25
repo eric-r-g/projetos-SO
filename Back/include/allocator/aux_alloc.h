@@ -21,7 +21,7 @@ struct bloco{
     bloco(int nid, int nini, int nsz) : id(nid), ini(nini), sz(nsz){}
     bloco(){}
 
-    bool operator <(bloco& o){
+    bool operator <(const bloco& o) const {
         if(ini != o.ini) return ini < o.ini;
         return id < o.id;
     }
