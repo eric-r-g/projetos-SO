@@ -1,7 +1,9 @@
 #include "../../include/allocator/memory.h"
 #include <bits/stdc++.h>
 
-memory::memory(int sz){
+void memory::init(int sz) {
+    blocos.clear();
+
     memory_sz = sz;
     cnt_id = 1;
     next_fit = 0;
@@ -100,7 +102,7 @@ std::pair <int, int> memory::alloc(int n, alloc_mode am){
             }
         }
         break;
-    
+
     default:
         break;
     }
@@ -166,9 +168,19 @@ int memory::l_hole(){
     return hole;
 }
 
+int memory::cnt_holes(){
+    int fim = 0;
+    int holes = 0;
+    for(bloco b : blocos){
+        if (b.ini > fim) holes++;
+        fim = b.ini + b.sz;
+    }
+    return holes;
+}
+
 void memory::defrag(defrag_mode dm){
     std::vector <bloco> temp;
-    
+
     int ini = 0, end = memory_sz;
     switch (dm)
     {
@@ -191,11 +203,11 @@ void memory::defrag(defrag_mode dm){
     case OPT: {
         auto l = blocos.begin();
         auto r = blocos.end();
-        
+
         while(l != r){
             bloco bl = *l;
             bloco br = *prev(r);
-            
+
             int ldif = bl.ini - ini;
             int rdif = end - (br.ini + br.sz);
             if(ldif < rdif){

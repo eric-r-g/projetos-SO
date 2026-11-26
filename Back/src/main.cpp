@@ -88,23 +88,85 @@ int main() {
             res.set_content(methods.text(), "application/json");
     });
 
-    // TODO: Implementar os 2 endpoints abaixo
-    svr.Put("/allocator/cmds", [](const httplib::Request &req, httplib::Response &res) {
+    svr.Post("/allocator/cmds", [](const httplib::Request &req, httplib::Response &res) {
+        std::stringstream cmds;
+        cmds << req.body;
+        std::string cmd;
+
+        memory mem;
+
+        json_array info;
+
+        while (cmds >> cmd) {
+            if (cmd == "show" || cmd == "stats") continue;
+            if (cmd == "init") {
+                int sz;
+                cmds >> sz;
+                mem.init(sz);
+            } else if (cmd == "alloc") {
+                int sz;
+                string alloc_mode_str;
+                alloc_mode am;
+                cmds >> sz;
+                cmds >> alloc_mode_str;
+                if (alloc_mode_str == "first") {
+                    am = FIRST;
+                } else if (alloc_mode_str == "best") {
+                    am = BEST;
+                } else if (alloc_mode_str == "worst") {
+                    am = WORST;
+                } else if (alloc_mode_str == "next") {
+                    am = NEXT;
+                }
+                mem.alloc(sz, am);
+            } else if (cmd == "freeid") {
+                int id;
+                cmds >> id;
+                mem.freeid(id);
+            } else if (cmd == "freeaddr") {
+                int addr;
+                cmds >> addr;
+                mem.freeaddr(addr);
+            } else if (cmd == "defrag") {
+                string defrag_mode_str;
+                defrag_mode dm;
+
+                cmds >> defrag_mode_str;
+                if (defrag_mode_str == "init") {
+                    dm = INIT;
+                } else if (defrag_mode_str == "end") {
+                    dm = END;
+                } else if (defrag_mode_str == "opt") {
+                    dm = OPT;
+                }
+                mem.defrag(dm);
+            }
+
+            // Exibição da disposição e estatísticas atuais da memória
+            json_object curr_info;
+            json_array curr_blocos;
+
+            for (auto b : mem.blocos) {
+                json_object jbloco;
+                jbloco.add("\"id\"", b.id);
+                jbloco.add("\"ini\"", b.ini);
+                jbloco.add("\"sz\"", b.sz);
+                curr_blocos.add(jbloco.text());
+            }
+
+            curr_info.add("\"blocos\"", curr_blocos.text());
+            curr_info.add("\"ocupado\"", mem.ocuppation);
+            curr_info.add("\"livre\"", mem.memory_sz - mem.ocuppation);
+            curr_info.add("\"buracos\"", mem.cnt_holes());
+            curr_info.add("\"maior buraco\"", mem.l_hole());
+            curr_info.add("\"uso efetivo\"", (float) mem.ocuppation / mem.memory_sz);
+
+            info.add(curr_info.text());
+        }
+
+        res.status = 201;
+        res.set_content(info.text(), "application/json");
     });
-
-    svr.Get("/allocator/states", [](const httplib::Request &req, httplib::Response &res) {
-    });
-
-    // TODO: Quem adicionou essas coisas?
-    // svr.set_post_routing_handler([](const httplib::Request& req, httplib::Response& res) {
-    //     res.set_header("Access-Control-Allow-Origin", "*");
-    //     res.set_header("Access-Control-Allow-Methods", "POST, PUT, GET, OPTIONS");
-    //     res.set_header("Access-Control-Allow-Headers", "Content-Type");
-    // });
-
-    // svr.Options(R"(.*)", [](const auto& req, auto& res) {
-    //     res.status = 204;
-    // });
 
     if (!svr.bind_to_port("0.0.0.0", 8080)) {
         std::cerr << "Falha ao tentar abrir uma conexão na porta 8080" << std::endl;
