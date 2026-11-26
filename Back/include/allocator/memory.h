@@ -4,7 +4,6 @@
 #include "aux_alloc.h"
 #include <set>
 #include <vector>
-#include <string>
 
 class memory{
     public:
@@ -12,7 +11,7 @@ class memory{
     std::pair <int, int> alloc(int n, alloc_mode am);
     bool freeid(int id);
     bool freeaddr(int addr);
-    std::vector<std::pair<std::string, int>> show();
+    void show(); // definir saida
     void stats(); // definir saida
     void defrag(defrag_mode dm);
     
