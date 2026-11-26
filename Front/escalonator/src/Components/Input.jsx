@@ -57,7 +57,7 @@ function Input({ onSimulationComplete }) {
         const configText = `quantum:${quantum}\naging:${aging}`;
         
         try {
-            const configResponse = await fetch('http://localhost:8080/config', {
+            const configResponse = await fetch('http://localhost:8080/escalonator/config', {
                 method: 'PUT',
                 headers: { 'Content-Type': 'text/plain' },
                 body: configText,
@@ -67,7 +67,7 @@ function Input({ onSimulationComplete }) {
                 throw new Error('Falha ao enviar as configurações de Quantum e Aging.');
             }
 
-            const procsResponse = await fetch('http://localhost:8080/procs', {
+            const procsResponse = await fetch('http://localhost:8080/escalonator/procs', {
                 method: 'POST',
                 headers: { 'Content-Type': 'text/plain' },
                 body: manualText,

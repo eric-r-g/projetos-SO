@@ -19,7 +19,7 @@ int main() {
     httplib::Server svr;
 
     // TODO: Colocar esses endpoints dentro de alguma(s) classe(s)
-    svr.Put("/config", [](const httplib::Request &req, httplib::Response &res) {
+    svr.Put("/escalonator/config", [](const httplib::Request &req, httplib::Response &res) {
             string config = req.body;
             ofstream configFile("config.txt");
             configFile << config;
@@ -31,11 +31,9 @@ int main() {
             res.set_content("Configurações definidas", "text/plain");
     });
 
-    svr.Post("/procs", [](const httplib::Request &req, httplib::Response &res) {
+    svr.Post("/escalonator/procs", [](const httplib::Request &req, httplib::Response &res) {
             string procsDesc = req.body;
             InputReader ir;
-
-            std::cout << procsDesc << std::endl;
 
             Config config = ir.readConfig();
             std::vector<Process> processes = ir.readProcesses(procsDesc);
