@@ -56,45 +56,36 @@ int main() {
             saidas.push_back(sjf.exec_process(processes));
             saidas.push_back(srtf.exec_process(processes));
 
-            std::string json = "";
-            json += "[\n";
+            json_array methods;
             for (int i = 0; i < saidas.size(); i++) {
+                json_object method;
+
                 Saida saida = saidas[i];
-                json += "{\n";
-                
-                json += "\"intervalos\": [\n";
+
+                json_array intervals;
 
                 for (int j = 0; j < saidas[i].intervalos.size(); j++) {
+                    json_object proc;
                     auto[iid, iini, ifim] = saidas[i].intervalos[j];
-                    json += "{\n";
 
-                    json += "\"id\": " + std::to_string(iid) + ",\n";
-                    json += "\"ini\": " + std::to_string(iini) + ",\n";
-                    json += "\"fim\": " + std::to_string(ifim) + "\n";
+                    proc.add("\"id\"", iid);
+                    proc.add("\"ini\"", iini);
+                    proc.add("\"fim\"", ifim);
 
-                    json += "}";
-                    if (j < saidas[i].intervalos.size()-1) json += ",";
-                    json += "\n";
+                    intervals.add(proc.text());
                 }
 
-                json += "],\n";
+                method.add("\"intervalos\"", intervals.text());
+                method.add("\"id\"", "\"" + saida.id + "\"");
+                method.add("\"tt\"", saida.tt);
+                method.add("\"tw\"", saida.tw);
+                method.add("\"num_trocas\"", saida.num_trocas);
 
-
-                json += "\"id\": \"" + saida.id + "\",\n";
-                json += "\"tt\": " + std::to_string(saida.tt) + ",\n";
-                json += "\"tw\": " + std::to_string(saida.tw) + ",\n";
-                json += "\"num_trocas\": " + std::to_string(saida.num_trocas) + "\n";
-
-                json += "}";
-                if (i < saidas.size()-1) json += ",";
-                json += "\n";
+                methods.add(method.text());
             }
-            json += "]\n";
-
-            std::cout << json;
 
             res.status = 201;
-            res.set_content(json, "application/json");
+            res.set_content(methods.text(), "application/json");
     });
 
     svr.set_post_routing_handler([](const httplib::Request& req, httplib::Response& res) {
