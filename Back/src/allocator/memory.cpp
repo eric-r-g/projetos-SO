@@ -166,6 +166,17 @@ int memory::l_hole(){
     return hole;
 }
 
+std::vector<std::pair<std::string, int>> memory::show() {
+    std::vector<std::pair<std::string, int>> saida;
+    for (auto b : blocos) {
+        saida.emplace_back("\"id\"", b.id);
+        saida.emplace_back("\"ini\"", b.ini);
+        saida.emplace_back("\"sz\"", b.sz);
+    }
+
+    return saida;
+}
+
 void memory::defrag(defrag_mode dm){
     std::vector <bloco> temp;
     
