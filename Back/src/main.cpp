@@ -88,15 +88,23 @@ int main() {
             res.set_content(methods.text(), "application/json");
     });
 
-    svr.set_post_routing_handler([](const httplib::Request& req, httplib::Response& res) {
-        res.set_header("Access-Control-Allow-Origin", "*");
-        res.set_header("Access-Control-Allow-Methods", "POST, PUT, GET, OPTIONS");
-        res.set_header("Access-Control-Allow-Headers", "Content-Type");
+    // TODO: Implementar os 2 endpoints abaixo
+    svr.Put("/allocator/cmds", [](const httplib::Request &req, httplib::Response &res) {
     });
 
-    svr.Options(R"(.*)", [](const auto& req, auto& res) {
-        res.status = 204;
+    svr.Get("/allocator/states", [](const httplib::Request &req, httplib::Response &res) {
     });
+
+    // TODO: Quem adicionou essas coisas?
+    // svr.set_post_routing_handler([](const httplib::Request& req, httplib::Response& res) {
+    //     res.set_header("Access-Control-Allow-Origin", "*");
+    //     res.set_header("Access-Control-Allow-Methods", "POST, PUT, GET, OPTIONS");
+    //     res.set_header("Access-Control-Allow-Headers", "Content-Type");
+    // });
+
+    // svr.Options(R"(.*)", [](const auto& req, auto& res) {
+    //     res.status = 204;
+    // });
 
     if (!svr.bind_to_port("0.0.0.0", 8080)) {
         std::cerr << "Falha ao tentar abrir uma conexão na porta 8080" << std::endl;
