@@ -1,4 +1,4 @@
-#include "InputReader.h"
+#include "escalonator/InputReader.h"
 
 std::vector<Process> InputReader::readProcesses(string procsDesc) {
     std::vector<Process> processes;

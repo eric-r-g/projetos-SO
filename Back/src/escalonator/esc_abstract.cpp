@@ -1,4 +1,4 @@
-#include "esc_abstract.h"
+#include "escalonator/esc_abstract.h"
 
 void esc_abstract::calc_estat(Saida& retorno, vector <Process> &processos){
     retorno.tt = 0, retorno.tw = 0;

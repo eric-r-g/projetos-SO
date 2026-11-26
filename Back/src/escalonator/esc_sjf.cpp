@@ -1,4 +1,4 @@
-#include "../include/esc_sjf.h"
+#include "escalonator/esc_sjf.h"
 
 //  comparador para a fila de prioridade, usando o de menor duração
 struct ProcessComparator {

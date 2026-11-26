@@ -1,4 +1,4 @@
-#include "../include/esc_rrcp.h"
+#include "escalonator/esc_rrcp.h"
 
 struct ProcessOn {
     int id;

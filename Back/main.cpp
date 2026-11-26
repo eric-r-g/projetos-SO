@@ -1,14 +1,19 @@
-#include "httplib.h"
+#include "httplib/httplib.h"
 
-#include "esc_abstract.h"
-#include "esc_fcfs.h"
-#include "esc_pcp.h"
-#include "esc_psp.h"
-#include "esc_rrsp.h"
-#include "esc_rrcp.h"
-#include "esc_sjf.h"
-#include "esc_srtf.h"
-#include "InputReader.h"
+#include "jsonparser/json_object.h"
+#include "jsonparser/json_array.h"
+
+#include "escalonator/esc_abstract.h"
+#include "escalonator/esc_fcfs.h"
+#include "escalonator/esc_pcp.h"
+#include "escalonator/esc_psp.h"
+#include "escalonator/esc_rrsp.h"
+#include "escalonator/esc_rrcp.h"
+#include "escalonator/esc_sjf.h"
+#include "escalonator/esc_srtf.h"
+#include "escalonator/InputReader.h"
+
+#include "allocator/memory.h"
 
 int main() {
     httplib::Server svr;
