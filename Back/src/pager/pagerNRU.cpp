@@ -15,7 +15,6 @@ struct pag_NRU{
 };
 
 saida_pag PagerNRU::access() {
-    saida_pag sp;
     int t = 0;
     std::set <pag_NRU> s;
 
@@ -24,18 +23,14 @@ saida_pag PagerNRU::access() {
     atual.id = a.page_id;
     atual.r = 1;
     atual.m = 0;
-    atual.t = t;
+    atual.t = t++;
 
     if (!pages.count(a.page_id)) {
         sp.horms.push_back(MISS);
         
         if(!available){
             int id_rem = (s.begin()) -> id;
-            if (dirty.find(id_rem) != dirty.end()) {
-                sp.disk_writes++;
-                dirty.erase(id_rem);
-            }
-
+            treat_dirty(id_rem);
             pages.erase(id_rem);
             s.erase(s.begin());
             available++;
@@ -63,7 +58,6 @@ saida_pag PagerNRU::access() {
     }
         
     s.insert(atual);
-    t++;
     if(t % 4 == 0){
 
         std::vector <pag_NRU> rem;
