@@ -12,8 +12,8 @@ std::vector<Process> InputReader::readProcesses(string procsDesc) {
 }
 
 Config InputReader::readConfig() {
-    if (!std::filesystem::exists("./config.txt")) {
-        std::cerr << "Erro: Crie um arquivo de texto nomeado \"config.txt\" com as informações sobre o tamanho do quantum e o fator de envelhecimento a serem utilizados." << std::endl;
+    if (!std::filesystem::exists("./escalonator-config.txt")) {
+        std::cerr << "Erro: Crie um arquivo de texto nomeado \"escalonator-config.txt\" com as informações sobre o tamanho do quantum e o fator de envelhecimento a serem utilizados." << std::endl;
         std::exit(EXIT_FAILURE);
     }
 
