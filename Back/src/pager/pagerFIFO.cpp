@@ -5,6 +5,7 @@ saida_pag PagerFIFO::access() {
 	if (!pages.count(a.page_id)) {
 	    sp.horms.push_back(MISS);
 	    if (!available) {
+		sp.evictions++;
 		treat_dirty(q.front());
 		pages.erase(q.front());
 		q.pop();

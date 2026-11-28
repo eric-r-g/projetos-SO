@@ -6,6 +6,7 @@ saida_pag PagerLRU::access() {
 	if (!pages.count(a.page_id)) {
 	    sp.horms.push_back(MISS);
 	    if (!available) {
+		sp.evictions++;
 		treat_dirty();
 		auto[t, page_id] = last_use.top();
 		last_use.pop();

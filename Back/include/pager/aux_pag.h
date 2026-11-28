@@ -21,6 +21,7 @@ enum horm {
 struct saida_pag {
     std::vector<horm> horms;
     int disk_writes;
+    int evictions = 0;
 };
 
 #endif

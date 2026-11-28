@@ -17,6 +17,10 @@
 
 #include "pager/pager.h"
 #include "pager/pagerFIFO.h"
+#include "pager/pagerLRU.h"
+#include "pager/pagerNRU.h"
+#include "pager/pagerLFU.h"
+#include "pager/pagerMFU.h"
 
 int main() {
     httplib::Server svr;
@@ -232,27 +236,46 @@ int main() {
 	saida_pag sp;
 
 	PagerFIFO pagfifo(sz, accseq);
-	// PagerLRU pagfifo(sz, accseq);
+	PagerLRU paglru(sz, accseq);
 	// PagerOPTIMAL pagfifo(sz, accseq);
 	// PagerCLOCK pagfifo(sz, accseq);
-	// PagerNRU pagfifo(sz, accseq);
-	// PagerLFU pagfifo(sz, accseq);
-	// PagerMFU pagfifo(sz, accseq);
+	PagerNRU pagnru(sz, accseq);
+	PagerLFU paglfu(sz, accseq);
+	PagerMFU pagmfu(sz, accseq);
 
 	if (pag_policy_str == "fifo") sp = pagfifo.access();
-	// else if (pag_policy_str == "lru") pp = LRU;
+	else if (pag_policy_str == "lru") sp = paglru.access();
 	// else if (pag_policy_str == "optimal") pp = OPTIMAL;
 	// else if (pag_policy_str == "clock") pp = CLOCK;
-	// else if (pag_policy_str == "nru") pp = NRU;
-	// else if (pag_policy_str == "lfu") pp = LFU;
-	// else if (pag_policy_str == "mfu") pp = MFU;
+	else if (pag_policy_str == "nru") sp = pagnru.access();
+	else if (pag_policy_str == "lfu") sp = paglfu.access();
+	else if (pag_policy_str == "mfu") sp = pagmfu.access();
 
+	json_object pager_info;
 	json_array json_horms;
+
+	int qtd_miss = 0;
+	int qtd_access = sp.horms.size();
+
+	for (auto hm : sp.horms) {
+	    if (hm == HIT) {
+		json_horms.add("HIT");
+	    } else if (hm == MISS) {
+		json_horms.add("MISS");
+		qtd_miss++;
+	    }
+	}
+
+	pager_info.add("\"Hits and Misses\"", json_horms.text());
+	pager_info.add("\"Faltas\"", qtd_miss);
+	pager_info.add("\"Taxa de Faltas\"", (float) qtd_miss / qtd_access);
+	pager_info.add("\"Evicções\"", sp.evictions);
+	pager_info.add("\"Escritas em disco\"", sp.disk_writes);
 
 	// TODO: Fazer uma checagem de validez do arquivo de configuração
 	// antes de aceitá-lo como válido
 	res.status = 201;
-	res.set_content(json_horms.text(), "application/json");
+	res.set_content(pager_info.text(), "application/json");
     });
 
     svr.set_post_routing_handler([](const httplib::Request& req, httplib::Response& res) {

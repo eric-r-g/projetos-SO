@@ -24,6 +24,7 @@ saida_pag PagerLFU::access() {
 
 	if (!pages.count(a.page_id)) {
 	    if (!available) {
+		sp.evictions++;
             int id_rem = (*s.begin()).id;
             treat_dirty(id_rem);
             pages.erase(id_rem);
