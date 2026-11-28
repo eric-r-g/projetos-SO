@@ -12,9 +12,11 @@ class Pager {
     std::set<int> dirty;
     int available;
     std::vector<acc> accseq;
+    saida_pag sp;
 
     public:
     Pager(int sz, std::vector<acc> accseq);
+    void treat_dirty(int page_id);
     virtual saida_pag access() = 0;
 };
 

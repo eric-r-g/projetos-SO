@@ -1,15 +1,11 @@
 #include "pager/pagerFIFO.h"
 
 saida_pag PagerFIFO::access() {
-    saida_pag sp;
     for (acc a : accseq) {
 	if (!pages.count(a.page_id)) {
 	    sp.horms.push_back(MISS);
 	    if (!available) {
-		if (dirty.find(q.front()) != dirty.end()) {
-		    sp.disk_writes++;
-		    dirty.erase(q.front());
-		}
+		treat_dirty(q.front());
 		pages.erase(q.front());
 		q.pop();
 		available++;
