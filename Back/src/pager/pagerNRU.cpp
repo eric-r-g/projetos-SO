@@ -20,64 +20,64 @@ saida_pag PagerNRU::access() {
     std::set <pag_NRU> s;
 
     for (acc a : accseq) {
-        pag_NRU atual;
-        atual.id = a.page_id;
-        atual.r = 1;
-        atual.m = 0;
-        atual.t = t;
+    pag_NRU atual;
+    atual.id = a.page_id;
+    atual.r = 1;
+    atual.m = 0;
+    atual.t = t;
 
-        if (!pages.count(a.page_id)) {
-            sp.horms.push_back(MISS);
-            
-            if(!available){
-                int id_rem = (s.begin()) -> id;
-                if (dirty.find(id_rem) != dirty.end()) {
-		            sp.disk_writes++;
-		            dirty.erase(id_rem);
-		        }
-
-                pages.erase(id_rem);
-                s.erase(s.begin());
-                available++;
+    if (!pages.count(a.page_id)) {
+        sp.horms.push_back(MISS);
+        
+        if(!available){
+            int id_rem = (s.begin()) -> id;
+            if (dirty.find(id_rem) != dirty.end()) {
+                sp.disk_writes++;
+                dirty.erase(id_rem);
             }
 
-            pages.insert(a.page_id);
-            available--;
-        } else {
-            sp.horms.push_back(HIT);
-            pag_NRU rem;
-            for(pag_NRU p : s){
-                if(p.id == a.page_id){
-                    atual.m |= p.m;
-                    atual.t = p.t;
-                    rem = p;
-                    break;
-                }
-            }
-            s.erase(rem);
+            pages.erase(id_rem);
+            s.erase(s.begin());
+            available++;
         }
 
-        if (a.at == WRITE) {
-            atual.m = 1;
-            dirty.insert(a.page_id);
-        }
-         
-        s.insert(atual);
-        t++;
-        if(t % 4 == 0){
-
-            std::vector <pag_NRU> rem;
-            for(pag_NRU p : s){
-                if(p.r == 1)
-                    rem.push_back(p);
-            }
-
-            for(pag_NRU p : rem){
-                s.erase(p);
-                p.r = 0;
-                s.insert(p);
+        pages.insert(a.page_id);
+        available--;
+    } else {
+        sp.horms.push_back(HIT);
+        pag_NRU rem;
+        for(pag_NRU p : s){
+            if(p.id == a.page_id){
+                atual.m |= p.m;
+                atual.t = p.t;
+                rem = p;
+                break;
             }
         }
+        s.erase(rem);
+    }
+
+    if (a.at == WRITE) {
+        atual.m = 1;
+        dirty.insert(a.page_id);
+    }
+        
+    s.insert(atual);
+    t++;
+    if(t % 4 == 0){
+
+        std::vector <pag_NRU> rem;
+        for(pag_NRU p : s){
+            if(p.r == 1)
+                rem.push_back(p);
+        }
+
+        for(pag_NRU p : rem){
+            s.erase(p);
+            p.r = 0;
+            s.insert(p);
+        }
+    }
     }
 
     return sp;
